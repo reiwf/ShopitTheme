@@ -1,0 +1,201 @@
+{% style %}
+.footer {
+  padding: 60px 0;
+  background: var(--color-background);
+  border-top: 1px solid var(--color-border);
+}
+
+.footer__content {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer__section-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+}
+
+.footer__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer__menu-item {
+  margin-bottom: 10px;
+}
+
+.footer__menu-link {
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color var(--duration-default) ease-in-out;
+}
+
+.footer__menu-link:hover {
+  color: var(--color-text);
+}
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-border);
+}
+
+.footer__copyright {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+}
+
+.footer__social {
+  display: flex;
+  gap: 20px;
+}
+
+.footer__social-link {
+  color: var(--color-text);
+  transition: color var(--duration-default) ease-in-out;
+}
+
+.footer__social-link:hover {
+  color: var(--color-text-light);
+}
+
+@media screen and (max-width: 768px) {
+  .footer__bottom {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+}
+{% endstyle %}
+
+<footer class="footer">
+  <div class="footer__content">
+    <div class="footer__grid">
+      <div class="footer__section">
+        <h2 class="footer__section-title">{{ section.settings.menu_title }}</h2>
+        {%- if section.settings.footer_menu != blank -%}
+          <ul class="footer__menu">
+            {%- for link in section.settings.footer_menu.links -%}
+              <li class="footer__menu-item">
+                <a href="{{ link.url }}" class="footer__menu-link">{{ link.title }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <div class="footer__section">
+        <h2 class="footer__section-title">{{ section.settings.contact_title }}</h2>
+        {%- if section.settings.contact_email != blank -%}
+          <ul class="footer__menu">
+            <li class="footer__menu-item">
+              <a href="mailto:{{ section.settings.contact_email }}" class="footer__menu-link">
+                {{ section.settings.contact_email }}
+              </a>
+            </li>
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <div class="footer__section">
+        <h2 class="footer__section-title">{{ section.settings.newsletter_title }}</h2>
+        {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input
+            type="email"
+            name="contact[email]"
+            id="NewsletterForm--{{ section.id }}"
+            class="footer__newsletter-input"
+            value="{{ form.email }}"
+            placeholder="{{ 'newsletter.label' | t }}"
+            required
+          >
+          <button type="submit" class="button">
+            {{ 'newsletter.button_label' | t }}
+          </button>
+        {%- endform -%}
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copyright">
+        &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. {{ section.settings.copyright_text }}
+      </div>
+      
+      <div class="footer__social">
+        {%- if settings.social_facebook_link != blank -%}
+          <a href="{{ settings.social_facebook_link }}" class="footer__social-link">
+            {% render 'icon-facebook' %}
+          </a>
+        {%- endif -%}
+        {%- if settings.social_instagram_link != blank -%}
+          <a href="{{ settings.social_instagram_link }}" class="footer__social-link">
+            {% render 'icon-instagram' %}
+          </a>
+        {%- endif -%}
+        {%- if settings.social_twitter_link != blank -%}
+          <a href="{{ settings.social_twitter_link }}" class="footer__social-link">
+            {% render 'icon-twitter' %}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "menu_title",
+      "label": "Menu Title",
+      "default": "Quick Links"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu",
+      "label": "Footer Menu",
+      "default": "footer"
+    },
+    {
+      "type": "text", 
+      "id": "contact_title",
+      "label": "Contact Title",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact Email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter Title",
+      "default": "Subscribe to our newsletter"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "All rights reserved."
+    }
+  ]
+}
+{% endschema %}

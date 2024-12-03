@@ -1,0 +1,139 @@
+{% style %}
+.header {
+  padding: 20px 0;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+}
+
+.header__logo-image {
+  max-width: 140px;
+  height: auto;
+}
+
+.header__navigation {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header__menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header__menu-item a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: color var(--duration-default) ease-in-out;
+}
+
+.header__menu-item a:hover {
+  color: var(--color-text-light);
+}
+
+.header__icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header__icon {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--duration-default) ease-in-out;
+}
+
+.header__icon:hover {
+  color: var(--color-text-light);
+}
+
+@media screen and (max-width: 768px) {
+  .header__menu {
+    display: none;
+  }
+}
+{% endstyle %}
+
+<header class="header">
+  <div class="header__content">
+    <div class="header__logo">
+      {%- if section.settings.logo != blank -%}
+        <img 
+          src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}"
+          alt="{{ section.settings.logo.alt | default: shop.name }}"
+          width="{{ section.settings.logo_width }}"
+          class="header__logo-image"
+        >
+      {%- else -%}
+        <span class="h4">{{ shop.name }}</span>
+      {%- endif -%}
+    </div>
+
+    <nav class="header__navigation" role="navigation">
+      <ul class="header__menu">
+        {%- for link in section.settings.menu.links -%}
+          <li class="header__menu-item">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header__icons">
+      <a href="{{ routes.search_url }}" class="header__icon">
+        {% render 'icon-search' %}
+      </a>
+      <a href="{{ routes.cart_url }}" class="header__icon">
+        {% render 'icon-cart' %}
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 140,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Menu"
+    }
+  ]
+}
+{% endschema %}
